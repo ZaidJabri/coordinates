@@ -1,6 +1,9 @@
-
-api_key="AIzaSyAKY_4kNJ0xHBgVCE6k9ZgSX-njXno1BTQ"
+api_key = "AIzaSyAKY_4kNJ0xHBgVCE6k9ZgSX-njXno1BTQ"
 import requests
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
 
 # def get_boundary_coordinates(place_name):
 #     overpass_url = "https://overpass-api.de/api/interpreter"
@@ -55,16 +58,30 @@ def get_boundary_coordinates(place_name):
     else:
         southwest = bounds["southwest"]
         northeast = bounds["northeast"]
-        boundary_coordinates = [(southwest["lat"], southwest["lng"]), (northeast["lat"], northeast["lng"]), (northeast["lat"], southwest["lng"]), (southwest["lat"], northeast["lng"])]
+        boundary_coordinates = [(southwest["lat"], southwest["lng"]), (northeast["lat"], northeast["lng"]),
+                                (northeast["lat"], southwest["lng"]), (southwest["lat"], northeast["lng"])]
     return boundary_coordinates
 
 
-
-
-
 # Example
-co=[]
+co = []
 co.append(get_boundary_coordinates("الجامعة الأردنية"))
+print(co)
 
-for i in co:
-    print(i)
+
+@app.route('/coordinates', methods=['GET'])
+def coordinates_Convert():
+    json_data = {}
+    points = {}
+
+    for i, point in enumerate(co[0]):
+        point_key = f"Point {i + 1}"
+        points[point_key] = {"latitude": point[0], "longtitude": point[1]}
+
+    json_data['Coordinate'] = points
+
+    return jsonify(json_data)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
