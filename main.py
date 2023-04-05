@@ -78,7 +78,7 @@ def coordinates_Convert():
         point_key = f"Point {i + 1}"
         points[point_key] = {"latitude": point[0], "longtitude": point[1]}
 
-    json_data['Coordinate'] = points
+    json_data = points
 
     return jsonify(json_data)
 
